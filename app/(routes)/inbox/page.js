@@ -21,7 +21,7 @@ const Inbox = () => {
               </button>
             </Link>
 
-            <div className="w-80 ">
+            <div className="w-80">
               <input
                 onChange={(e) => setSearchInboxValue(e.target.value)}
                 id="autocomplete-1-input"
@@ -83,4 +83,5 @@ const Inbox = () => {
     </>
   );
 };
+
 export default Inbox;

@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 // import WebSocket from "ws";
 
-const useWebSocket = (url) => {
+const useWebSocket = () => {
   const [clientId, setClientId] = useState(null);
+  const [emailList, setEmailList] = useState(null);
+
+  let url = "ws://49.13.157.39:30000/ws";
 
   useEffect(() => {
     const socket = new WebSocket(url);
@@ -14,14 +17,15 @@ const useWebSocket = (url) => {
     };
 
     socket.onmessage = (event) => {
-      console.log("Received:", event);
-      let res = event.data;
-      let my_id = res.replace(/[{}]/g, "");
-      setClientId(my_id);
-    };
-
-    socket.onclose = () => {
-      console.log("Disconnected from server");
+      // setEmailList(event.data);
+      // let res = event.data;
+      // let my_id = res.replace(/[{}]/g, "");
+      // setClientId(my_id);
+      // setClientId(event.data.client_id);
+      // console.log(message.client_id);
+      const message = JSON.parse(event.data);
+      setEmailList(message.EmailAccount);
+      setClientId(message.client_id);
     };
 
     socket.onerror = (error) => {
@@ -29,7 +33,7 @@ const useWebSocket = (url) => {
     };
   }, []);
 
-  return clientId;
+  return { clientId, emailList };
 };
 
 export default useWebSocket;

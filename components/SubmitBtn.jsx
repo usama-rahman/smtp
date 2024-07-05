@@ -4,7 +4,7 @@ import useWebSocket from "@/hooks/useWebSocket";
 
 const SubmitBtn = () => {
   const { emailData } = useEmail();
-  const clientId = useWebSocket("ws://49.13.157.39:30000/ws");
+  const { clientId } = useWebSocket();
 
   const handleSubmitUpload = async () => {
     try {
@@ -17,7 +17,7 @@ const SubmitBtn = () => {
           Referer: "http://49.13.157.39:55000/",
           "Referrer-Policy": "strict-origin-when-cross-origin",
         },
-        body: `{"email_addresses": ${emailData} , ${clientId} }`,
+        body: `{"email_addresses": ${emailData} , "client_id":${clientId} }`,
       });
     } catch (error) {
       console.error("Fetch Error:", error);

@@ -1,18 +1,27 @@
-import WebSocket from "ws";
+// import WebSocket from "ws";
 
-const wsConnection = () => {
-  let clientId = "";
-  const ws = new WebSocket("ws://49.13.157.39:30000/ws");
+// const url = "ws://49.13.157.39:30000/ws";
+// const socket = new WebSocket(url);
 
-  ws.on("error", console.error);
+// let clientId;
 
-  ws.on("message", function message(data) {
-    clientId = data.toString();
-  });
+// export default function wsConnection() {
+//   socket.on("open", () => {
+//     console.log("Connected to server");
+//   });
 
-  setTimeout(() => {
-    return clientId;
-  }, 1000);
-};
+//   socket.onmessage = (event) => {
+//     console.log("Received:", event.data);
+//     clientId = event.data.toString();
+//   };
 
-export default wsConnection;
+//   socket.on("close", () => {
+//     console.log("Disconnected from server");
+//   });
+
+//   socket.on("error", (error) => {
+//     console.error("WebSocket error:", error);
+//   });
+// }
+
+// export { clientId };

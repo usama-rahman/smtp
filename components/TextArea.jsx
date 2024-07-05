@@ -20,11 +20,11 @@ const TextArea = () => {
     return { username, password };
   });
 
-  const result = {
-    email_addresses: emailPasswords,
-  };
+  // const result = {
+  //   email_addresses: emailPasswords,
+  // };
 
-  let jsonString = JSON.stringify(result);
+  let jsonString = JSON.stringify(emailPasswords);
   setEmailData(jsonString);
 
   return (

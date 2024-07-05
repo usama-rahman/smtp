@@ -1,51 +1,38 @@
-"use client";
+// "use client";
 
-import { setEmailObj } from "@/utils/data";
+import { useContext } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import WebSocket from "ws";
+
+import TextArea from "@/components/TextArea";
+import { EmailContext } from "@/context/EmailContext";
 
 const UploadModal = () => {
-  const [areaValue, setAreaValue] = useState("");
+  // WebSocket connection
 
-  const lines = areaValue
-    .trim()
-    .split("\n")
-    .filter((line) => line);
+  let clientId = "";
+  const ws = new WebSocket("ws://49.13.157.39:30000/ws");
 
-  const delimiterRegex = /[\t ,]+/;
+  ws.on("error", console.error);
 
-  const emailPasswords = lines.map((line) => {
-    const [username, password] = line.split(delimiterRegex);
-    return { username, password };
+  ws.on("message", function message(data) {
+    clientId = data.toString();
   });
 
-  const result = {
-    email_addresses: emailPasswords,
-  };
+  // api Request
 
-  const jsonString = JSON.stringify(result);
-
-  setEmailObj(jsonString);
-  console.log(jsonString);
-
-  const handleSubmitUpload = async () => {
-    await axios.post("http://49.13.157.39:30000/fetch-emails/", {
-      email_addresses: jsonString,
-      client_id: wsClientId,
-    });
-  };
+  // const handleSubmitUpload = async () => {
+  //   await axios.post("http://49.13.157.39:30000/fetch-emails/", {
+  //     email_addresses: emailData,
+  //     client_id: clientId,
+  //   });
+  // };
 
   return (
     <div className=" flex justify-center items-center pt-4 bg-slate-950 h-screen  ">
       <div className="bg-slate-400 flex flex-col items-center  w-2/3 justify-between py-4 px-3 rounded-md">
-        <textarea
-          id="emailandpass"
-          rows="10"
-          cols="70"
-          className="rounded-md px-3 py-2 outline-none "
-          onChange={(e) => setAreaValue(e.target.value)}
-        />
+        <TextArea />
         <div className="mt-4">
           <Link
             href="/"
@@ -54,7 +41,7 @@ const UploadModal = () => {
             Close
           </Link>
           <button
-            onClick={handleSubmitUpload}
+            // onClick={handleSubmitUpload}
             className=" items-center justify-center overflow-hidden rounded-md bg-gray-900 px-3 py-1 text-sm font-medium text-white ring-1 ring-gray-900 transition duration-300 md:inline-flex"
           >
             Submit

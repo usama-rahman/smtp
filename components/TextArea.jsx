@@ -1,10 +1,11 @@
 "use client";
 
-import { useEmail } from "@/hooks/useEmail";
 import { useState } from "react";
+import { useEmail } from "@/hooks/useEmail";
 
 const TextArea = () => {
-  const { emailData, setEmailData } = useEmail();
+  const { setEmailData } = useEmail();
+
   const [areaValue, setAreaValue] = useState("");
 
   const lines = areaValue

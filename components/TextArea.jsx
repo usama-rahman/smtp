@@ -1,31 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useEmail } from "@/hooks/useEmail";
 
 const TextArea = () => {
   const { setEmailData } = useEmail();
-
   const [areaValue, setAreaValue] = useState("");
 
-  const lines = areaValue
-    .trim()
-    .split("\n")
-    .filter((line) => line);
+  useEffect(() => {
+    const lines = areaValue
+      .trim()
+      .split("\n")
+      .filter((line) => line);
 
-  const delimiterRegex = /[\t ,]+/;
+    const delimiterRegex = /[\t ,]+/;
 
-  const emailPasswords = lines.map((line) => {
-    const [username, password] = line.split(delimiterRegex);
-    return { username, password };
-  });
+    const emailPasswords = lines.map((line) => {
+      const [username, password] = line.split(delimiterRegex);
+      return { username, password };
+    });
 
-  // const result = {
-  //   email_addresses: emailPasswords,
-  // };
-
-  let jsonString = JSON.stringify(emailPasswords);
-  setEmailData(jsonString);
+    let jsonString = JSON.stringify(emailPasswords);
+    setEmailData(jsonString);
+  }, [areaValue, setEmailData]);
 
   return (
     <textarea

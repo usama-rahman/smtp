@@ -1,27 +1,46 @@
-// import WebSocket from "ws";
+"use client";
+import { useWs } from "@/hooks/useWebSocket";
+import { useEffect, useState } from "react";
+const useWebSocket = () => {
+  const {
+    emailList,
+    setEmailList,
+    clientId,
+    setClientId,
+    resMail,
+    setResMail,
+  } = useWs();
 
-// const url = "ws://49.13.157.39:30000/ws";
-// const socket = new WebSocket(url);
+  let url = "ws://49.13.157.39:30000/ws";
 
-// let clientId;
+  useEffect(() => {
+    const socket = new WebSocket(url);
 
-// export default function wsConnection() {
-//   socket.on("open", () => {
-//     console.log("Connected to server");
-//   });
+    socket.onopen = () => {
+      console.log("Connected to server");
+    };
 
-//   socket.onmessage = (event) => {
-//     console.log("Received:", event.data);
-//     clientId = event.data.toString();
-//   };
+    socket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.client_id) {
+          setClientId(message.client_id);
+        }
+        if (message.EmailAccount) {
+          const emails = message.EmailAccount;
+          setResMail((prevmail) => [...prevmail, emails]);
+        }
+      } catch (error) {
+        console.error("Error parsing message:", error);
+      }
+    };
 
-//   socket.on("close", () => {
-//     console.log("Disconnected from server");
-//   });
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+  }, [url, setClientId, setEmailList, setResMail]);
 
-//   socket.on("error", (error) => {
-//     console.error("WebSocket error:", error);
-//   });
-// }
+  return { emailList, clientId, resMail };
+};
 
-// export { clientId };
+export default useWebSocket;

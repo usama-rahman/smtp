@@ -1,10 +1,14 @@
 "use client";
 import { useEmail } from "@/hooks/useEmail";
-import useWebSocket from "@/hooks/useWebSocket";
+import useWebSocket from "@/ws";
+
+import { useRouter } from "next/navigation";
 
 const SubmitBtn = () => {
   const { emailData } = useEmail();
   const { clientId } = useWebSocket();
+
+  const router = useRouter();
 
   const handleSubmitUpload = async () => {
     try {
@@ -19,6 +23,7 @@ const SubmitBtn = () => {
         },
         body: `{"email_addresses": ${emailData} , "client_id":${clientId} }`,
       });
+      router.push("/");
     } catch (error) {
       console.error("Fetch Error:", error);
     }

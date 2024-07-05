@@ -1,4 +1,5 @@
 import WebSocket from "ws";
+
 const webSocket = () => {
   const ws = new WebSocket("ws://49.13.157.39:30000/ws");
 
@@ -9,4 +10,4 @@ const webSocket = () => {
   });
 };
 
-export default webSocket;
+export { webSocket };

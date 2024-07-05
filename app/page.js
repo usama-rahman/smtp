@@ -1,6 +1,6 @@
 import List from "@/components/List";
 import Navbar from "@/components/Navbar";
-import webSocket from "@/ws";
+import { webSocket } from "@/ws";
 
 export default function Home() {
   webSocket();

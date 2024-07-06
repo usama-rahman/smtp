@@ -8,6 +8,7 @@ const WsProvider = ({ children }) => {
   const [emailList, setEmailList] = useState([]);
   const [clientId, setClientId] = useState(null);
   const [resMail, setResMail] = useState([]);
+  const [wsEmail, setWsEmail] = useState([]);
 
   return (
     <WsContext.Provider
@@ -18,6 +19,8 @@ const WsProvider = ({ children }) => {
         setClientId,
         resMail,
         setResMail,
+        wsEmail,
+        setWsEmail,
       }}
     >
       {children}

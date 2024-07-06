@@ -9,6 +9,8 @@ const useWebSocket = () => {
     setClientId,
     resMail,
     setResMail,
+    wsEmail,
+    setWsEmail,
   } = useWs();
 
   let url = "ws://49.13.157.39:30000/ws";
@@ -30,6 +32,10 @@ const useWebSocket = () => {
           const emails = message.EmailAccount;
           setResMail((prevmail) => [...prevmail, emails]);
         }
+        if (typeof message === "object" && !Array.isArray(message)) {
+          const filteredMessage = !message.client_id ? [message] : [];
+          setWsEmail((prevMes) => [...prevMes, ...filteredMessage]);
+        }
       } catch (error) {
         console.error("Error parsing message:", error);
       }
@@ -38,9 +44,9 @@ const useWebSocket = () => {
     socket.onerror = (error) => {
       console.error("WebSocket error:", error);
     };
-  }, [url, setClientId, setEmailList, setResMail]);
+  }, [url]);
 
-  return { emailList, clientId, resMail };
+  return { emailList, clientId, wsEmail, resMail };
 };
 
 export default useWebSocket;

@@ -2,25 +2,46 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useWs } from "@/hooks/useWebSocket";
 
 const Inbox = () => {
   const [searchInboxValue, setSearchInboxValue] = useState("");
+  const [singleAccount, setSingleAccount] = useState(null);
+
+  const { wsEmail } = useWs();
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const user = searchParams.get("user");
+
+  function filterByEmail(accounts, user) {
+    return accounts.filter((account) => account.EmailAccount.includes(user));
+  }
 
   useEffect(() => {
-    setSearchInboxValue("");
-  }, []);
+    const filteredAccount = filterByEmail(wsEmail, user);
+
+    localStorage.setItem("singleAccount", JSON.stringify(filteredAccount));
+
+    setSingleAccount(filteredAccount);
+  }, [wsEmail, user]);
 
   return (
     <>
       <div className="bg-gray-950 flex flex-col w-full h-screen">
         <div className=" flex justify-center items-center pt-4 ">
           <div className=" bg-slate-400 flex w-2/3 justify-between py-4 px-3 rounded-md">
-            <Link href="/">
-              <button className="before:transtion-opacity group relative isolate hidden items-center justify-center overflow-hidden rounded-md bg-gray-900 px-3 py-[0.1875rem] text-sm font-medium text-white shadow-[0_1px_theme(colors.white/0.07)_inset,0_1px_3px_theme(colors.gray.900/0.2)] ring-1 ring-gray-900 transition duration-300 md:inline-flex">
-                Back
-              </button>
-            </Link>
+            <button
+              onClick={() => router.back()}
+              className="before:transtion-opacity group relative isolate hidden items-center justify-center overflow-hidden rounded-md bg-gray-900 px-3 py-[0.1875rem] text-sm font-medium text-white shadow-[0_1px_theme(colors.white/0.07)_inset,0_1px_3px_theme(colors.gray.900/0.2)] ring-1 ring-gray-900 transition duration-300 md:inline-flex"
+            >
+              Back
+            </button>
 
+            <h2 className="text-xl">
+              {singleAccount && singleAccount[0]?.EmailAccount}{" "}
+            </h2>
             <div className="w-80">
               <input
                 onChange={(e) => setSearchInboxValue(e.target.value)}
@@ -43,39 +64,24 @@ const Inbox = () => {
                 <span> Date</span>
               </li>
 
-              <Link
-                href="/"
-                className="flex px-3 py-1 mt-2 rounded-sm bg-slate-200 justify-between w-full"
-              >
-                <span> usama@gmail.com </span>
-                <span className="justify-start ">
-                  I hope you are doing well
-                </span>
-                <span> Mon, 24 Jun 2024 19:12:49 +0000</span>
-              </Link>
-
-              <li className="flex px-3 py-1 mt-2 rounded-sm bg-slate-200 justify-between w-full">
-                <span> usama@gmail.com </span>
-                <span className="justify-start ">
-                  association dedicated to combating waste, progressively
-                  expanding its
-                </span>
-                <span> Mon, 24 Jun 2024 19:12:49 +0000</span>
-              </li>
-              <li className="flex px-3 py-1 mt-2 rounded-sm bg-slate-200 justify-between w-full">
-                <span> usama@gmail.com </span>
-                <span className="justify-start ">
-                  Here’s your confirmation code 👍
-                </span>
-                <span> Mon, 24 Jun 2024 19:12:49 +0000</span>
-              </li>
-              <li className="flex px-3 py-1 mt-2 rounded-sm bg-slate-200 justify-between w-full">
-                <span> usama@gmail.com </span>
-                <span className="justify-start ">
-                  Founded in 2013 in Paris, NO MORE WASTE is a humanitarian
-                </span>
-                <span> Mon, 24 Jun 2024 19:12:49 +0000</span>
-              </li>
+              {singleAccount && singleAccount[0]?.EmailContents.length === 0 ? (
+                <p className="flex px-3 py-1 mt-2 rounded-sm bg-slate-200 justify-center w-full">
+                  no email
+                </p>
+              ) : (
+                singleAccount &&
+                singleAccount[0]?.EmailContents.map((item, index) => (
+                  <Link
+                    href={`/inbox/mail?time=${item.date}`}
+                    className="flex px-3 py-1 mt-2 rounded-sm bg-slate-200 justify-between w-full"
+                    key={index}
+                  >
+                    <span> {item.from} </span>
+                    <span className="justify-start ">{item.subject}</span>
+                    <span> {item.date}</span>
+                  </Link>
+                ))
+              )}
             </ul>
           </div>
         </div>

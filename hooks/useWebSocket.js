@@ -9,6 +9,8 @@ export const useWs = () => {
     setClientId,
     resMail,
     setResMail,
+    wsEmail,
+    setWsEmail,
   } = useContext(WsContext);
   return {
     emailList,
@@ -17,5 +19,7 @@ export const useWs = () => {
     setClientId,
     resMail,
     setResMail,
+    wsEmail,
+    setWsEmail,
   };
 };
